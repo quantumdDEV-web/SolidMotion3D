@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SolidMotion3D — interactive rigid-body mechanics and Euler-angle visualization.">
+<title>SolidMotion3D | Rigid Body Mechanics</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">S</span><div><strong>SolidMotion<span>3D</span></strong><small>Rigid Body Mechanics Lab</small></div></div>
+  <div class="top-actions">
+    <button id="resetBtn" class="ghost">Reset</button>
+    <button id="playBtn" class="primary">▶ Play</button>
+  </div>
+</header>
+<main class="layout">
+  <section class="stage">
+    <div id="scene"></div>
+    <div class="hud">
+      <div><b>R₀</b><span>Reference frame</span></div>
+      <div><b>Rₛ</b><span>Solid frame</span></div>
+      <div><b>ψ θ φ</b><span>Euler angles</span></div>
+    </div>
+    <div class="stage-footer"><span id="modeBadge">GENERAL MOTION</span><span id="fps">0 FPS</span></div>
+  </section>
+  <aside class="panel">
+    <div class="section">
+      <label>Motion model</label>
+      <select id="mode">
+        <option value="general">General motion</option>
+        <option value="translation">Translation</option>
+        <option value="rotation">Fixed-axis rotation</option>
+        <option value="euler">Euler-angle rotation</option>
+        <option value="rolling">Rolling demo</option>
+      </select>
+    </div>
+    <div class="section">
+      <div class="section-title">Position · Oₛ</div>
+      <div class="grid3">
+        <label>X<input id="px" type="range" min="-3" max="3" step=".01" value="0"><output id="pxv">0.00</output></label>
+        <label>Y<input id="py" type="range" min="-2" max="2" step=".01" value=".4"><output id="pyv">0.40</output></label>
+        <label>Z<input id="pz" type="range" min="-3" max="3" step=".01" value="0"><output id="pzv">0.00</output></label>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Euler angles</div>
+      <div class="slider"><label>ψ <span>precession</span><output id="psiv">35°</output></label><input id="psi" type="range" min="-180" max="180" value="35"></div>
+      <div class="slider"><label>θ <span>nutation</span><output id="thetav">25°</output></label><input id="theta" type="range" min="-89" max="89" value="25"></div>
+      <div class="slider"><label>φ <span>proper rotation</span><output id="phiv">60°</output></label><input id="phi" type="range" min="-180" max="180" value="60"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Angular velocity</div>
+      <div class="readout"><span>ωx</span><b id="wx">0.00</b><span>rad/s</span></div>
+      <div class="readout"><span>ωy</span><b id="wy">0.00</b><span>rad/s</span></div>
+      <div class="readout"><span>ωz</span><b id="wz">0.00</b><span>rad/s</span></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Visualization</div>
+      <div class="checks">
+        <label><input id="trail" type="checkbox" checked> Point trajectory</label>
+        <label><input id="axes" type="checkbox" checked> Body axes</label>
+        <label><input id="nodal" type="checkbox" checked> Nodal line</label>
+        <label><input id="vectors" type="checkbox" checked> Velocity vector</label>
+      </div>
+    </div>
+    <div class="formula">
+      <small>Velocity field</small>
+      <code>V(P) = V(Oₛ) + Ω × OₛP</code>
+      <small>Euler decomposition</small>
+      <code>Ω = ψ̇ k₀ + θ̇ u + φ̇ kₛ</code>
+    </div>
+  </aside>
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
