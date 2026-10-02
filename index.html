@@ -3,76 +3,138 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SolidMotion3D — interactive rigid-body mechanics and Euler-angle visualization.">
-<title>SolidMotion3D | Rigid Body Mechanics</title>
+<meta name="description" content="SolidMotion3D Scientific Laboratory — interactive rigid-body mechanics, reference frames and Euler-angle visualization.">
+<title>SolidMotion3D | Scientific Mechanics Lab</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <header class="topbar">
-  <div class="brand"><span class="brand-mark">S</span><div><strong>SolidMotion<span>3D</span></strong><small>Rigid Body Mechanics Lab</small></div></div>
+  <div class="brand">
+    <div class="brand-mark">SM</div>
+    <div><strong>SolidMotion<span>3D</span></strong><small>Scientific Mechanics Laboratory</small></div>
+  </div>
+  <div class="lab-status"><i></i> SIMULATION ONLINE <span id="simTime">t = 0.00 s</span></div>
   <div class="top-actions">
-    <button id="resetBtn" class="ghost">Reset</button>
-    <button id="playBtn" class="primary">▶ Play</button>
+    <button id="resetBtn" class="ghost">Reset experiment</button>
+    <button id="playBtn" class="primary">▶ Run</button>
   </div>
 </header>
-<main class="layout">
-  <section class="stage">
+
+<main class="lab">
+  <section class="viewport-panel">
+    <div class="viewport-head">
+      <div><span class="eyebrow">EXPERIMENT 01</span><h1>Rigid Body Motion</h1></div>
+      <div class="view-tools">
+        <button id="homeView" title="Reset camera">⌂</button>
+        <button id="gridBtn" title="Toggle grid">▦</button>
+      </div>
+    </div>
     <div id="scene"></div>
-    <div class="hud">
-      <div><b>R₀</b><span>Reference frame</span></div>
-      <div><b>Rₛ</b><span>Solid frame</span></div>
-      <div><b>ψ θ φ</b><span>Euler angles</span></div>
+    <div class="instrument-strip">
+      <div><span>FRAME</span><b>R₀ / Rₛ</b></div>
+      <div><span>POSITION</span><b id="posRead">0.00 · 0.40 · 0.00 m</b></div>
+      <div><span>ORIENTATION</span><b id="oriRead">ψ 35° · θ 25° · φ 60°</b></div>
+      <div><span>FPS</span><b id="fps">0</b></div>
     </div>
-    <div class="stage-footer"><span id="modeBadge">GENERAL MOTION</span><span id="fps">0 FPS</span></div>
+    <div class="scene-legend">
+      <span><i class="x"></i>X / x′</span><span><i class="y"></i>Y / y′</span><span><i class="z"></i>Z / z′</span><span><i class="point"></i>Tracked point P</span>
+    </div>
   </section>
-  <aside class="panel">
-    <div class="section">
-      <label>Motion model</label>
-      <select id="mode">
-        <option value="general">General motion</option>
-        <option value="translation">Translation</option>
-        <option value="rotation">Fixed-axis rotation</option>
-        <option value="euler">Euler-angle rotation</option>
-        <option value="rolling">Rolling demo</option>
-      </select>
+
+  <aside class="control-panel">
+    <div class="panel-tabs">
+      <button class="tab active" data-tab="experiment">Experiment</button>
+      <button class="tab" data-tab="analysis">Analysis</button>
+      <button class="tab" data-tab="theory">Theory</button>
     </div>
-    <div class="section">
-      <div class="section-title">Position · Oₛ</div>
-      <div class="grid3">
-        <label>X<input id="px" type="range" min="-3" max="3" step=".01" value="0"><output id="pxv">0.00</output></label>
-        <label>Y<input id="py" type="range" min="-2" max="2" step=".01" value=".4"><output id="pyv">0.40</output></label>
-        <label>Z<input id="pz" type="range" min="-3" max="3" step=".01" value="0"><output id="pzv">0.00</output></label>
+
+    <div class="tab-content active" id="experiment">
+      <div class="section">
+        <label class="field-label">Motion protocol</label>
+        <select id="mode">
+          <option value="general">General spatial motion</option>
+          <option value="translation">Pure translation</option>
+          <option value="rotation">Fixed-axis rotation</option>
+          <option value="euler">Euler-angle motion</option>
+          <option value="rolling">Rolling motion</option>
+        </select>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Position of Oₛ</div>
+        <div class="grid3">
+          <label>X<input id="px" type="range" min="-3" max="3" step=".01" value="0"><output id="pxv">0.00</output></label>
+          <label>Y<input id="py" type="range" min="-2" max="2" step=".01" value=".4"><output id="pyv">0.40</output></label>
+          <label>Z<input id="pz" type="range" min="-3" max="3" step=".01" value="0"><output id="pzv">0.00</output></label>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Euler orientation</div>
+        <div class="angle-row"><label>ψ <small>precession</small></label><output id="psiv">35°</output></div><input id="psi" type="range" min="-180" max="180" value="35">
+        <div class="angle-row"><label>θ <small>nutation</small></label><output id="thetav">25°</output></div><input id="theta" type="range" min="-89" max="89" value="25">
+        <div class="angle-row"><label>φ <small>proper rotation</small></label><output id="phiv">60°</output></div><input id="phi" type="range" min="-180" max="180" value="60">
+      </div>
+
+      <div class="section">
+        <div class="section-title">Instruments</div>
+        <div class="metric-grid">
+          <div><span>ωx</span><b id="wx">0.00</b><small>rad/s</small></div>
+          <div><span>ωy</span><b id="wy">0.00</b><small>rad/s</small></div>
+          <div><span>ωz</span><b id="wz">0.00</b><small>rad/s</small></div>
+          <div><span>|ω|</span><b id="wm">0.00</b><small>rad/s</small></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Sensors & overlays</div>
+        <div class="checks">
+          <label><input id="trail" type="checkbox" checked> Point trajectory</label>
+          <label><input id="axes" type="checkbox" checked> Body axes</label>
+          <label><input id="nodal" type="checkbox" checked> Nodal line</label>
+          <label><input id="vectors" type="checkbox" checked> Velocity vector</label>
+          <label><input id="gridToggle" type="checkbox" checked> Laboratory grid</label>
+        </div>
       </div>
     </div>
-    <div class="section">
-      <div class="section-title">Euler angles</div>
-      <div class="slider"><label>ψ <span>precession</span><output id="psiv">35°</output></label><input id="psi" type="range" min="-180" max="180" value="35"></div>
-      <div class="slider"><label>θ <span>nutation</span><output id="thetav">25°</output></label><input id="theta" type="range" min="-89" max="89" value="25"></div>
-      <div class="slider"><label>φ <span>proper rotation</span><output id="phiv">60°</output></label><input id="phi" type="range" min="-180" max="180" value="60"></div>
-    </div>
-    <div class="section">
-      <div class="section-title">Angular velocity</div>
-      <div class="readout"><span>ωx</span><b id="wx">0.00</b><span>rad/s</span></div>
-      <div class="readout"><span>ωy</span><b id="wy">0.00</b><span>rad/s</span></div>
-      <div class="readout"><span>ωz</span><b id="wz">0.00</b><span>rad/s</span></div>
-    </div>
-    <div class="section">
-      <div class="section-title">Visualization</div>
-      <div class="checks">
-        <label><input id="trail" type="checkbox" checked> Point trajectory</label>
-        <label><input id="axes" type="checkbox" checked> Body axes</label>
-        <label><input id="nodal" type="checkbox" checked> Nodal line</label>
-        <label><input id="vectors" type="checkbox" checked> Velocity vector</label>
+
+    <div class="tab-content" id="analysis">
+      <div class="section">
+        <div class="section-title">Live state</div>
+        <div class="state-card"><span>Translation</span><b id="analysisPos">Oₛ = (0.00, 0.40, 0.00) m</b></div>
+        <div class="state-card"><span>Euler orientation</span><b id="analysisAngles">ψ=35° · θ=25° · φ=60°</b></div>
+        <div class="state-card"><span>Angular speed</span><b id="analysisOmega">|ω| = 0.00 rad/s</b></div>
+      </div>
+      <div class="section">
+        <div class="section-title">Tracked point P</div>
+        <div class="state-card"><span>Body coordinates</span><b>Pₛ = (1.00, 0.25, 0.45) m</b></div>
+        <div class="state-card"><span>World coordinates</span><b id="pointWorld">P₀ = (0.00, 0.00, 0.00) m</b></div>
+      </div>
+      <div class="section">
+        <div class="section-title">Motion decomposition</div>
+        <div class="formula-box">
+          <code>V(P) = V(Oₛ) + Ω × OₛP</code>
+          <code>Ω = ψ̇ k₀ + θ̇ u + φ̇ kₛ</code>
+        </div>
+        <p class="note">The visualization separates translation of the solid origin from rotation of the body frame.</p>
       </div>
     </div>
-    <div class="formula">
-      <small>Velocity field</small>
-      <code>V(P) = V(Oₛ) + Ω × OₛP</code>
-      <small>Euler decomposition</small>
-      <code>Ω = ψ̇ k₀ + θ̇ u + φ̇ kₛ</code>
+
+    <div class="tab-content" id="theory">
+      <div class="section">
+        <span class="eyebrow">REFERENCE FRAMES</span>
+        <h2>Laboratory coordinates</h2>
+        <p>The fixed frame R₀ defines the laboratory axes. The moving frame Rₛ is attached to the rigid body and follows its orientation.</p>
+      </div>
+      <div class="theory-card"><b>ψ · Precession</b><span>Rotation about the laboratory Z axis.</span></div>
+      <div class="theory-card"><b>θ · Nutation</b><span>Tilts the body symmetry axis relative to the reference frame.</span></div>
+      <div class="theory-card"><b>φ · Proper rotation</b><span>Rotation of the solid about its moving symmetry axis.</span></div>
+      <div class="formula-box big"><code>R = Rz(ψ) · Ry(θ) · Rx(φ)</code><small>Convention shown by the laboratory visualizer</small></div>
+      <div class="callout">Drag the scene to orbit the camera. Scroll to zoom. Use Run to observe the prescribed motion protocol.</div>
     </div>
   </aside>
 </main>
+<footer><span>SolidMotion3D LAB</span><span>Interactive rigid-body mechanics · quantumDEV</span></footer>
 <script type="module" src="./app.js"></script>
 </body>
 </html>
