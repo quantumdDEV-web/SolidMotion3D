@@ -1,40 +1,61 @@
 # SolidMotion3D
 
-Interactive 3D rigid-body mechanics laboratory.
+**SolidMotion3D Scientific Mechanics Laboratory** is an interactive browser based laboratory for studying rigid body kinematics, reference frames, translation and rotation.
 
-SolidMotion3D visualizes the kinematics of a rigid solid with six degrees of freedom, including translation, fixed-axis rotation, general motion and Euler-angle rotations.
+## Laboratory interface
 
-## Current features
+The upgraded interface is organized like a scientific instrument:
 
-* Interactive 3D rigid body and reference frame
-* Translation controls
-* Euler angles ψ, θ and φ
-* Precession, nutation and proper-rotation labels
-* Body and reference coordinate frames
-* Point trajectory visualization
-* Velocity-vector visualization
-* Nodal-line visualization
-* Rolling demonstration
-* Responsive dark scientific interface
-* Zero build step: deploy directly with GitHub Pages
+• Experiment panel for controlling the motion protocol  
+• Analysis panel for live kinematic measurements  
+• Theory panel for reference frames and Euler angle concepts  
+• 3D laboratory viewport with orbit and zoom controls  
+• Instrument strip with live position, orientation and frame information  
+• Sensor overlays for trajectories, body axes, velocity and nodal line  
 
-## Mechanics model
+## Motion protocols
 
-The project is based on the supplied rigid-body mechanics course. The course describes complete spatial position using three translational variables and three rotational variables, and defines Euler angles for the orientation of the solid frame. It also describes the decomposition of motion into translation, pivoting and rolling.
+**General spatial motion** combines translation and orientation changes.
 
-The visualization uses the Euler sequence concept represented by the course: precession ψ, nutation θ and proper rotation φ.
+**Pure translation** moves the rigid body without changing its orientation.
+
+**Fixed axis rotation** continuously changes the precession angle.
+
+**Euler angle motion** varies ψ, θ and φ to demonstrate coupled orientation changes.
+
+**Rolling motion** demonstrates translation coupled with rotation.
+
+## Euler convention
+
+The interface presents the orientation using the sequence
+
+R = Rz(ψ) · Ry(θ) · Rx(φ)
+
+where ψ is precession, θ is nutation and φ is proper rotation.
+
+## Kinematics
+
+For a point P attached to a rigid solid:
+
+V(P) = V(Oₛ) + Ω × OₛP
+
+and the angular velocity is represented conceptually as
+
+Ω = ψ̇ k₀ + θ̇ u + φ̇ kₛ
+
+The numerical animation values are intended for visualization and experimentation rather than as a symbolic mechanics solver.
 
 ## Run
 
-Open `index.html` locally or enable GitHub Pages for the repository.
+Open `index.html` or deploy the repository with GitHub Pages. The application uses Three.js from a CDN and requires no build system.
 
 ## Roadmap
 
-* Exact symbolic kinematics
-* Live angular-velocity decomposition
-* Acceleration field
-* Instantaneous screw axis
-* Rolling without slipping constraints
-* Disk, sphere and cylinder bodies
-* Numerical integration of prescribed angular velocity
-* Exportable experiments
+• Exact rotation matrix panel  
+• Acceleration field visualization  
+• Instantaneous screw axis  
+• Torseur integration  
+• Rolling without slipping constraints  
+• Disk, sphere and cylinder bodies  
+• Numerical integration of prescribed angular velocity  
+• Experiment recording and export
